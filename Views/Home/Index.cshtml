@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Главная";
+}
+
+<!-- Большой баннер -->
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm text-center" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold text-primary mb-3">Добро пожаловать в ToyStore!</h1>
+        <p class="col-md-8 mx-auto fs-4 text-muted">
+            Лучший магазин игрушек для детей и взрослых. У нас вы найдете мягких мишек, скоростные машинки и многое другое.
+        </p>
+        <a asp-controller="Toys" asp-action="Index" class="btn btn-primary btn-lg mt-3 px-5 py-3 shadow">
+            <i class="fa fa-shopping-bag me-2"></i> Перейти в каталог
+        </a>
+    </div>
+</div>
+
+<!-- Блоки с преимуществами -->
+<div class="row text-center mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm py-4">
+            <div class="card-body">
+                <div class="text-primary mb-3">
+                    <i class="fa fa-truck fa-3x"></i>
+                </div>
+                <h4 class="card-title">Быстрая доставка</h4>
+                <p class="card-text text-muted">Доставим ваши игрушки в течение 24 часов по всей стране.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm py-4">
+            <div class="card-body">
+                <div class="text-success mb-3">
+                    <i class="fa fa-shield-alt fa-3x"></i>
+                </div>
+                <h4 class="card-title">Гарантия качества</h4>
+                <p class="card-text text-muted">Все игрушки сертифицированы и безопасны для здоровья.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm py-4">
+            <div class="card-body">
+                <div class="text-warning mb-3">
+                    <i class="fa fa-gift fa-3x"></i>
+                </div>
+                <h4 class="card-title">Бонусы и скидки</h4>
+                <p class="card-text text-muted">Постоянным покупателям — скидки до 20% и подарки к заказу.</p>
+            </div>
+        </div>
+    </div>
+</div>

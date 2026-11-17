@@ -1,0 +1,50 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using ToyStore2.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav align-items-center">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <!-- Маленькая аватарка -->
+                <img src="@Url.Action("GetAvatar", "Image")" width="35" height="35" class="rounded-circle me-2 border border-2 border-white shadow-sm" style="object-fit: cover;" alt="Avatar" />
+                <span class="d-none d-md-inline text-dark fw-bold">@User.Identity?.Name</span>
+            </a>
+            <!-- Выпадающее меню -->
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3" aria-labelledby="navbarDropdown">
+                <!-- Шапка меню с большой аватаркой -->
+                <li class="text-center py-4 bg-light border-bottom">
+                    <img src="@Url.Action("GetAvatar", "Image")" width="80" height="80" class="rounded-circle shadow-sm mb-2" style="object-fit: cover;" alt="Avatar" />
+                    <br />
+                    <strong class="text-dark">@User.Identity?.Name</strong>
+                </li>
+
+                <!-- Ссылки -->
+                <li>
+                    <a class="dropdown-item py-2" href="#">
+                        <i class="fa fa-shopping-bag me-2 text-muted"></i> Мои товары
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="dropdown-item py-2 text-danger fw-bold">
+                            <i class="fa fa-sign-out-alt me-2"></i> Log off
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark fw-bold" asp-area="Identity" asp-page="/Account/Register">Регистрация</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark fw-bold" asp-area="Identity" asp-page="/Account/Login">Вход</a>
+        </li>
+    }
+</ul>

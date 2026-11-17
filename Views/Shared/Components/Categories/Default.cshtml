@@ -1,0 +1,11 @@
+﻿@model IEnumerable<ToyStore2.Models.Category>
+
+<div class="list-group mb-4">
+    <h5 class="mb-3">Категории</h5>
+    @foreach (var cat in Model)
+    {
+        <a href="#" class="list-group-item list-group-item-action">
+            @cat.Name
+        </a>
+    }
+</div>
