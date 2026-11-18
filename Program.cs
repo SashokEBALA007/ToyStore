@@ -5,11 +5,11 @@ using ToyStore2.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// База данных
-var connectionString = "Server=(localdb)\\mssqllocaldb;Database=ToyStore2;Trusted_Connection=True;MultipleActiveResultSets=true";
+// Р‘Р°Р·Р° РґР°РЅРЅС‹С… (РћСЃС‚Р°РІРёР» РЅРѕРІРѕРµ РёРјСЏ ToyStore2_New, С‡С‚РѕР±С‹ РЅР°РІРµСЂРЅСЏРєР° Р±РµР· СЃС‚Р°СЂС‹С… РѕС€РёР±РѕРє)
+var connectionString = "Server=(localdb)\\mssqllocaldb;Database=ToyStore2_New;Trusted_Connection=True;MultipleActiveResultSets=true";
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
-// Identity (с упрощенными паролями)
+// Identity СЃ РЅР°СЃС‚СЂРѕР№РєР°РјРё РїР°СЂРѕР»РµР№ Рё Р’РЎРўР РћР•РќРќР«Рњ РёРЅС‚РµСЂС„РµР№СЃРѕРј (AddDefaultUI)
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -19,37 +19,39 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 4;
 })
-.AddEntityFrameworkStores<ApplicationDbContext>();
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders()
+.AddDefaultUI(); // <--- Р’РћРў Р­РўРђ РЎРўР РћР§РљРђ Р’РљР›Р®Р§РђР•Рў РЎРўРђРќР”РђР РўРќРЈР® Р Р•Р“РРЎРўР РђР¦РР®
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Создание БД, тестовых данных и пользователя
+// РЎРѕР·РґР°РЅРёРµ Р‘Р”, С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С… Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-    // 1. Создаем базу данных, если её нет
+    // 1. РЎРѕР·РґР°РµРј Р±Р°Р·Сѓ РґР°РЅРЅС‹С…, РµСЃР»Рё РµС‘ РЅРµС‚
     context.Database.EnsureCreated();
 
-    // 2. Добавляем игрушки и категории, если их нет
+    // 2. Р”РѕР±Р°РІР»СЏРµРј РёРіСЂСѓС€РєРё Рё РєР°С‚РµРіРѕСЂРёРё, РµСЃР»Рё РёС… РЅРµС‚
     if (!context.Categories.Any())
     {
-        var catSoft = new ToyStore2.Models.Category { Name = "Мягкие игрушки" };
-        var catCars = new ToyStore2.Models.Category { Name = "Машинки" };
+        var catSoft = new ToyStore2.Models.Category { Name = "РњСЏРіРєРёРµ РёРіСЂСѓС€РєРё" };
+        var catCars = new ToyStore2.Models.Category { Name = "РњР°С€РёРЅРєРё" };
         context.Categories.AddRange(catSoft, catCars);
         context.SaveChanges();
 
         context.Toys.AddRange(
-            new ToyStore2.Models.Toy { Name = "Мягкий мишка", Description = "Большой и уютный", Price = 1500, ImageUrl = "/images/bear.jpg", CategoryId = catSoft.Id },
-            new ToyStore2.Models.Toy { Name = "Гоночная машинка", Description = "Красная, быстрая", Price = 750, ImageUrl = "/images/car.jpg", CategoryId = catCars.Id }
+            new ToyStore2.Models.Toy { Name = "РњСЏРіРєРёР№ РјРёС€РєР°", Description = "Р‘РѕР»СЊС€РѕР№ Рё СѓСЋС‚РЅС‹Р№", Price = 1500, ImageUrl = "/images/bear.jpg", CategoryId = catSoft.Id },
+            new ToyStore2.Models.Toy { Name = "Р“РѕРЅРѕС‡РЅР°СЏ РјР°С€РёРЅРєР°", Description = "РљСЂР°СЃРЅР°СЏ, Р±С‹СЃС‚СЂР°СЏ", Price = 750, ImageUrl = "/images/car.jpg", CategoryId = catCars.Id }
         );
         context.SaveChanges();
     }
 
-    // 3. ПРИНУДИТЕЛЬНО СОЗДАЕМ ПОЛЬЗОВАТЕЛЯ (Обход ошибки 400)
+    // 3. РџСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕ СЃРѕР·РґР°РµРј С‚РµСЃС‚РѕРІРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     if (await userManager.FindByEmailAsync("admin@test.ru") == null)
     {
@@ -58,7 +60,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// УБРАЛИ СТРОГИЕ ПРОВЕРКИ HTTPS (чтобы не было конфликтов)
 app.UseStaticFiles();
 app.UseRouting();
 
